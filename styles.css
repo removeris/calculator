@@ -5,8 +5,9 @@
 }
 
 #container {
-    height: 800px;
-    width: 480px;
+    height: 900px;
+    width: 580px;
+    padding: 50px;
     border: 2px solid black;
     display: flex;
     flex-direction: column;
@@ -15,6 +16,7 @@
 }
 
 #result-container {
+    padding: 15px;
     width: 480px;
     display: flex;
     justify-content: flex-end;
@@ -23,7 +25,7 @@
 
 #result {
     font-size: 70px;
-    padding: 15px;
+    overflow: hidden;
 }
 
 #inputs-container {
