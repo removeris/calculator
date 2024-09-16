@@ -39,6 +39,10 @@ function enterNumber() {
                     case "zero":
                         number += '0'
                         break;
+                    case "return":
+                        number = number.slice(0, number.length - 1); 
+                        console.log(number.slice(0, number.length - 1));
+                        break;
                     default:
                         break;
                 }
