@@ -6,7 +6,7 @@
 
 #container {
     height: 900px;
-    width: 580px;
+    width: 730px;
     padding: 50px;
     border: 2px solid black;
     display: flex;
@@ -17,7 +17,7 @@
 
 #result-container {
     padding: 15px;
-    width: 480px;
+    width: 100%;
     min-height: 110px;
     display: flex;
     justify-content: flex-end;
@@ -30,7 +30,7 @@
 }
 
 #inputs-container {
-    width: 480px;
+    width: 100%;
     height: 630px;
     flex-grow: 1;
     display: flex;
@@ -46,6 +46,7 @@
 
 
 button.number,
+button.operation,
 #return {
     font-size: 70px;
     padding: 30px 50px;
