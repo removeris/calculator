@@ -14,8 +14,6 @@ function getUserInput() {
 
     number = result.textContent;
 
-    let operation;
-
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
             if(hasClass(e.target, "number")){
@@ -51,16 +49,20 @@ function getUserInput() {
                         case "zero":
                             number += '0';
                             break;
-                        case "floating-point":
-                            number += ".";
-                            break;
                         case "return":
                             number = number.slice(0, number.length - 1); 
+                            break;
+                        case "floating-point":
+                            if(!number.includes("."))
+                                number += ".";
                             break;
                     }
                 }
                 else {
-                    alert("The number is too large.");
+                    if (e.target.id == "return")
+                        number = number.slice(0, number.length - 1);
+                    else
+                        alert("The number is too large.");
                 }
                 result.textContent = number;
             }
@@ -78,14 +80,60 @@ function getUserInput() {
                     case "divide":
                         operation = "/";
                         break;
-                    case "equals":
-                        operation = "=";
-                        break;
                 }
-                console.log(operation);
+                result.textContent = operation;
+                
+                if(e.target.id != "equals")
+                    num1 = parseFloat(number);
+                else if(e.target.id == "equals"){
+                    num2 = parseFloat(number);
+                    performOperation(num1, num2, operation);
+                }
+                number = '';
             }
         })
     })
 }
+
+function performOperation(num1, num2, operation) {
+    const resultDiv = document.querySelector("#result");
+    
+    let result;
+
+    switch(operation){
+        case "+":
+            result = addition(num1, num2);
+            break;
+        case "-":
+            result = subtraction(num1, num2);
+            break;
+        case "X":
+            result = multiplication(num1, num2);
+            break;
+        case "/":
+            result = division(num1, num2);
+            break;
+    }
+
+    resultDiv.textContent = result;
+}
+
+function addition(num1, num2) {
+    return num1 + num2;
+}
+
+function subtraction(num1, num2) {
+    return num1 - num2;
+}
+
+function multiplication(num1, num2) {
+    return num1 * num2;
+}
+
+function division(num1, num2) {
+    return num1 / num2;
+}
+
+let num1, num2;
 
 getUserInput();
