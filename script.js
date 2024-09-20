@@ -3,137 +3,165 @@ function hasClass(elem, string) {
 }
 
 function isValidNumber(num) {
+    numLength = num.length;
     num = parseInt(num);
-    return number.length <= 16 || number < Number.MAX_SAFE_INTEGER;
+    return numLength <= 16 || num < Number.MAX_SAFE_INTEGER;
 }
 
-function getUserInput() {
-    const buttons = document.querySelectorAll(".number, .operation");
-
-    const result = document.querySelector("#result");
-
-    number = result.textContent;
-
-    buttons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            if(hasClass(e.target, "number")){
-                if(isValidNumber(number)){
-                    switch(e.target.id){
-                        case "one":
-                            number += '1';
-                            break;
-                        case "two":
-                            number += '2';
-                            break;
-                        case "three":
-                            number += '3';
-                            break;
-                        case "four":
-                            number += '4';
-                            break;
-                        case "five":
-                            number += '5';
-                            break;
-                        case "six":
-                            number += '6';
-                            break;
-                        case "seven":
-                            number += '7';
-                            break;
-                        case "eight":
-                            number += '8';
-                            break;
-                        case "nine":
-                            number += '9';
-                            break;
-                        case "zero":
-                            number += '0';
-                            break;
-                        case "return":
-                            number = number.slice(0, number.length - 1); 
-                            break;
-                        case "floating-point":
-                            if(!number.includes("."))
-                                number += ".";
-                            break;
-                    }
-                }
-                else {
-                    if (e.target.id == "return")
-                        number = number.slice(0, number.length - 1);
-                    else
-                        alert("The number is too large.");
-                }
-                result.textContent = number;
-            }
-            else if(hasClass(e.target, "operation")) {
-                switch(e.target.id){
-                    case "add":
-                        operation = "+";
-                        break;
-                    case "subtract":
-                        operation = "-";
-                        break;
-                    case "multiply":
-                        operation = "X";
-                        break;
-                    case "divide":
-                        operation = "/";
-                        break;
-                }
-                result.textContent = operation;
-                
-                if(e.target.id != "equals")
-                    num1 = parseFloat(number);
-                else if(e.target.id == "equals"){
-                    num2 = parseFloat(number);
-                    performOperation(num1, num2, operation);
-                }
-                number = '';
-            }
-        })
-    })
+function deleteLastChar(string){
+    return string.slice(0, string.length - 1);
 }
 
-function performOperation(num1, num2, operation) {
-    const resultDiv = document.querySelector("#result");
-    
-    let result;
+function bothNumbersEntered(num1, num2) {
+    return num1 != undefined && num2 != undefined
+}
 
-    switch(operation){
-        case "+":
-            result = addition(num1, num2);
-            break;
-        case "-":
-            result = subtraction(num1, num2);
-            break;
-        case "X":
-            result = multiplication(num1, num2);
-            break;
-        case "/":
-            result = division(num1, num2);
-            break;
+class calculator {
+    constructor(){
+        this.num = undefined;
+        this.num2 = undefined;
+        this.operationResult = undefined;
+        this.currentOperation = '';
+        this.screen = document.querySelector("#result");
     }
 
-    resultDiv.textContent = result;
+    addition() {
+        return this.num1 + this.num2;
+    }
+    subtraction() {
+        return this.num1 - this.num2;
+    }
+    multiplication () {
+        return this.num1 * this.num2;
+    }
+    division() {
+        return this.num1 / this.num2;
+    }
+
+    getUserInput(){
+        const buttons = document.querySelectorAll(".number, .operation");
+
+        let currentNumber = '';
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                if(hasClass(e.target, "number")){
+                    if(isValidNumber(currentNumber)){
+                        switch(e.target.id){
+                            case "one":
+                                currentNumber += '1';
+                                break;
+                            case "two":
+                                currentNumber += '2';
+                                break;
+                            case "three":
+                                currentNumber += '3';
+                                break;
+                            case "four":
+                                currentNumber += '4';
+                                break;
+                            case "five":
+                                currentNumber += '5';
+                                break;
+                            case "six":
+                                currentNumber += '6';
+                                break;
+                            case "seven":
+                                currentNumber += '7';
+                                break;
+                            case "eight":
+                                currentNumber += '8';
+                                break;
+                            case "nine":
+                                currentNumber += '9';
+                                break;
+                            case "zero":
+                                currentNumber += '0';
+                                break;
+                            case "return":
+                                currentNumber = deleteLastChar(currentNumber);
+                                break;
+                            case "floating-point":
+                                if(!currentNumber.includes("."))
+                                    currentNumber += ".";
+                                break;
+                        }
+                    }
+                    else {
+                        if (e.target.id == "return")
+                            currentNumber = deleteLastChar(curentNumber);
+                        else
+                            alert("The number is too large.");
+                    }
+                    this.screen.textContent = currentNumber;
+                }
+                else if(hasClass(e.target, "operation")) {
+                    switch(e.target.id){
+                        case "add": 
+                            this.currentOperation += "+";
+                            break;
+                        case "subtract":
+                            this.currentOperation += "-";
+                            break;
+                        case "multiply":
+                            this.currentOperation += "X";
+                            break;
+                        case "divide":
+                            this.currentOperation += "/";
+                            break;
+                    }
+
+                    if(this.num1 == undefined){
+                        this.num1 = parseFloat(currentNumber);
+                        currentNumber = '';
+                    }
+                    else if(this.num2 == undefined){
+                        this.num2 = parseFloat(currentNumber);
+                        currentNumber = '';
+                    }
+
+                    if((bothNumbersEntered(this.num1, this.num2) && this.currentOperation != '') || (e.target.id == "equals" && bothNumbersEntered(this.num1, this.num2))){
+                        this.performOperation();
+
+                        if(e.target.id == "equals")
+                            currentNumber = this.operationResult;   
+
+                        if(this.currentOperation != ''){
+                            this.num1 = this.operationResult;
+                            currentNumber = '';
+                        }
+                    }
+                        
+                }
+            })
+        })
+    }
+
+    performOperation() {    
+        switch(this.currentOperation.charAt(0)){
+            case "+":
+                this.operationResult = this.addition();
+                break;
+            case "-":
+                this.operationResult = this.subtraction();
+                break;
+            case "X":
+                this.operationResult = this.multiplication();
+                break;
+            case "/":
+                this.operationResult = this.division();
+                break;
+        }
+        this.num1 = undefined;
+        this.num2 = undefined;
+        
+        this.currentOperation = this.currentOperation.substring(1);
+
+        this.screen.textContent = parseFloat(this.operationResult);
+    }
+
 }
 
-function addition(num1, num2) {
-    return num1 + num2;
-}
+const calc = new calculator();
 
-function subtraction(num1, num2) {
-    return num1 - num2;
-}
-
-function multiplication(num1, num2) {
-    return num1 * num2;
-}
-
-function division(num1, num2) {
-    return num1 / num2;
-}
-
-let num1, num2;
-
-getUserInput();
+calc.getUserInput();
