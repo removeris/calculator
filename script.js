@@ -119,7 +119,7 @@ class calculator {
                     }
                     else {
                         if (e.target.id == "return")
-                            currentNumber = deleteLastChar(curentNumber);
+                            currentNumber = deleteLastChar(currentNumber);
                         else
                             alert("The number is too large.");
                     }
@@ -142,7 +142,6 @@ class calculator {
                         case "clear":
                             this.fullClear();
                             currentNumber = '';
-                            console.log(`${this.num1} and ${this.num2}, a${this.currentOperation}b op + ${currentNumber} num`);
                             break;
                         case "invert":
                             currentNumber = invertNumber(currentNumber);
