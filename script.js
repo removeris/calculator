@@ -16,6 +16,25 @@ function bothNumbersEntered(num1, num2) {
     return num1 != undefined && num2 != undefined
 }
 
+function invertNumber(number) {
+    if(number.includes('-')) {
+        number = number.substring(1);
+    }
+    else {
+        number = '-' + number;
+    }
+
+    return number;
+}
+
+function convertToPercentage(number) {
+    if(number.includes('.'))
+        return number;
+    else {
+        return '0.' + number;
+    }
+}
+
 class calculator {
     constructor(){
         this.num = undefined;
@@ -23,6 +42,10 @@ class calculator {
         this.operationResult = undefined;
         this.currentOperation = '';
         this.screen = document.querySelector("#result");
+    }
+
+    updateScreen(value) {
+        this.screen.textContent = value; 
     }
 
     addition() {
@@ -36,6 +59,13 @@ class calculator {
     }
     division() {
         return this.num1 / this.num2;
+    }
+
+    fullClear() {
+        this.num1 = undefined;
+        this.num2 = undefined;
+        this.currentOperation = '';
+        this.screen.textContent = '';
     }
 
     getUserInput(){
@@ -109,32 +139,50 @@ class calculator {
                         case "divide":
                             this.currentOperation += "/";
                             break;
+                        case "clear":
+                            this.fullClear();
+                            currentNumber = '';
+                            console.log(`${this.num1} and ${this.num2}, a${this.currentOperation}b op + ${currentNumber} num`);
+                            break;
+                        case "invert":
+                            currentNumber = invertNumber(currentNumber);
+                            this.updateScreen(currentNumber);
+                            break;
+                        case "percentage":
+                            currentNumber = convertToPercentage(currentNumber);
+                            this.updateScreen(currentNumber);
+                            break;
                     }
-
-                    if(this.num1 == undefined){
-                        this.num1 = parseFloat(currentNumber);
-                        currentNumber = '';
-                    }
-                    else if(this.num2 == undefined){
-                        this.num2 = parseFloat(currentNumber);
-                        currentNumber = '';
-                    }
-
-                    if((bothNumbersEntered(this.num1, this.num2) && this.currentOperation != '') || (e.target.id == "equals" && bothNumbersEntered(this.num1, this.num2))){
-                        this.performOperation();
-
-                        if(e.target.id == "equals")
-                            currentNumber = this.operationResult;   
-
-                        if(this.currentOperation != ''){
-                            this.num1 = this.operationResult;
+                    
+                    if(hasClass(e.target, "binary")){
+                        if(this.num1 == undefined){
+                            this.num1 = parseFloat(currentNumber);
                             currentNumber = '';
                         }
-                    }
-                        
+                        else if(this.num2 == undefined){
+                            this.num2 = parseFloat(currentNumber);
+                            currentNumber = '';
+                        }
+    
+                        if((bothNumbersEntered(this.num1, this.num2) && this.currentOperation != '') || (e.target.id == "equals" && bothNumbersEntered(this.num1, this.num2))){
+                            this.performOperation();
+    
+                            if(e.target.id == "equals")
+                                currentNumber = '' + this.operationResult;   
+    
+                            if(this.currentOperation != ''){
+                                this.num1 = this.operationResult;
+                                currentNumber = '';
+                            }
+                        }
+                    }                        
                 }
             })
         })
+    }
+
+    buttonHover() {
+        const buttons = document.querySelectorAll("button");
     }
 
     performOperation() {    
@@ -164,4 +212,5 @@ class calculator {
 
 const calc = new calculator();
 
+calc.buttonHover();
 calc.getUserInput();
